@@ -94,6 +94,7 @@ public class App {
             }
         }
 
+        //Insere os navios no tabuleiro de acordo com cada sigla
         solve(5, tabuleiro, " P");
         solve(4, tabuleiro, " E");
         solve(3, tabuleiro, " C");
