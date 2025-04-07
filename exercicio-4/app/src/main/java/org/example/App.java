@@ -4,14 +4,21 @@
 package org.example;
 
 import java.util.Scanner;
-//linha por linha sc.hasNextLine()
-//palavra por palavra sc.hashNext
+
 public class App {
 
     //Uma variável global para a validação. Minha ideia aqui é que se caso algumas das funções de validação forem chamadas e por algum acaso entrar dentro de alguma condicional, ela é incrementada.
     //Se passar por todos as condicionais sem ser incrementada, então o tabuleiro é válido
     static int tabuleiroValido = 0;
 
+
+    //A função validaDimensao faz a leitura inicial do arquivo. É criado um array de strings e cada string lida do arquivo é adicionada na posição 'i' iterada dentro do loop while
+    //O Loop while contendo entrada.hashNext() vai ler o arquivo enquanto ouver linhas disponíveis. E entrada.next() fica lendo palavra por palavra e adicionando no array
+
+    /*É interessante verificar que a leitura do arquivo só pode ser feita uma vez com redirecionamento de entrada. Nesse caso não é possível ler o arquivo duas vezes.
+     * Caso fosse possível, uma solução melhor seria primeiramente ler o arquivo com para se obter a quantidade de palavras, depois criar um array de string com a quantidade de palavras suficientes e
+     * por fim ler novamente o arquivo, mas adicionando o conteudo corretamente. Nesse caso criei um array unidemensional com tamanho 150 para o armazenamento de todo o conteúdo
+    */
     static String[] validaDimensao (){
         int  i =0;
         Scanner entrada = new Scanner(System.in);
@@ -21,18 +28,22 @@ public class App {
             palavras[i++] = entrada.next();
         }
        
+        //Se a quantidade de palavras lidas forem maior que 100, retorna o erro e incrementa o valor da variável global
         if(i != 100){
             System.out.println("Tabuleiro com dimensão inválida!");
-            tabuleiroValido++;
+            tabuleiroValido++; 
         }
    
-        return palavras;
+        return palavras; //retorna o array contendo o conteudo a ser validado pelas proximas funções
     }
 
-    //valida se existe outros navios dentro do tabuleiro
+    /*Valida se existe outros navios dentro do tabuleiro. Aqui a função vai percorrer o array de string por cada posição, se encontrar qualquer string que seja diferente das que ja são conhecidas 
+    por um array válido, altera o valor da variável conhecidas e sai do loop for, pois se um caracter ja é desconhecido, não precisa validar o resto do array.
+    Dentro do loop de verificação, se caso a posição iterada por igual a null, o loop só ignora essa posição, para evitar erros de comparação com null.
+    /*/
     static String[] ValidaNavios(){
         String [] palavras = validaDimensao();
-        int conhecidos = 1; //PARTE DO PRINCIPIO QUE TODOS OS NAVIOS SÃO CONHECIDOS
+        int conhecidos = 1; //Parte do principio que todos os navios são conhecidos
 
     
 
@@ -44,18 +55,23 @@ public class App {
 
             if(!(p.equals("C") || p.equals("S") || p.equals("P") || p.equals("N") || p.equals("E") || p.equals("."))){
                 conhecidos = 0;
+                break;
             }
         }
 
+        //Reporta o erro e incrementa o valor da variável global 
         if(conhecidos == 0){
             System.out.println("Tabuleiro com outros navios!");
             tabuleiroValido++;
         }
 
-        return palavras;
+        return palavras; //retorna o array contendo o conteudo a ser validado pelas proximas funções
         }
 
-        //A função vai validar se na matriz passada existe ao menos um caracter do tipo C, S, P, N e E
+        /*A função vai validar se na matriz passada existe ao menos um caracter do tipo C, S, P, N e E. De maneira semelhante a função ValidaNavios, temos novamente um loop que percorre
+        cada posição do array, caso encontre alguma string do tipo C, S, P, N e E, incrementa seu valor.
+
+        */
         static String[] ValidaNavioDeCadaTipo(){
             String [] palavras = ValidaNavios();
             int qtdC = 0, qtdS = 0, qtdP =0, qtdN = 0, qtdE = 0;
@@ -73,9 +89,13 @@ public class App {
                 }
             }
 
-            boolean validacao = qtdC < 1 || qtdE < 1 || qtdS < 1 || qtdP < 1 || qtdN < 1;  //SE ALGUM POSSUIR QUANTIDADE IGUAL A 0 => RETORNA TRUE
-            boolean validacao2 = qtdC > 3 || qtdE > 4 || qtdS > 3 || qtdP > 5 || qtdN > 2; //SE ALGUM POSSUIR MULTIPLOS NAVIOS DO MESMO TIPO ==> RETORNA TRUE
-            boolean validacao3 = qtdC < 3 || qtdE < 4 || qtdS < 3 || qtdP < 5 || qtdN < 2; //para o caso de possui navios de cada tipo e não possui multiplos navios, mas sim navios insuficientes
+            /*Depois da validação da quantidade validamos se ele possui um navio de cada tipo pelo menos, se possui navios insuficientes ou múltiplos navios */
+
+            boolean validacao = qtdC < 1 || qtdE < 1 || qtdS < 1 || qtdP < 1 || qtdN < 1;  //Se algum possuir quantidade igual a 0, vai retornar verdadeiro, para isso, basta verificar se a quantidade é menor que 1
+            boolean validacao2 = qtdC > 3 || qtdE > 4 || qtdS > 3 || qtdP > 5 || qtdN > 2; //Se algum possuir uma quantidade de navios maior do que a padrão do jogo (P = 5, E = 4, C = 3, S = 3 e N = 2)
+            boolean validacao3 = qtdC < 3 || qtdE < 4 || qtdS < 3 || qtdP < 5 || qtdN < 2; //Para o caso de possuir navios de cada tipo e não possuir multiplos navios, mas sim navios insuficientes
+            
+            //Retorna o erro correspondende e incrementa o valor da variável global de validação
             if(validacao){
                 System.out.println("Tabuleiro não inclui um navio de cada tipo!");
                 tabuleiroValido++;
@@ -91,12 +111,14 @@ public class App {
                 System.out.println("Tabuleiro possui navios insuficientes!");
                 tabuleiroValido++;
             }
-            return palavras;
+            return palavras; //retorna o array contendo o conteudo a ser validado pelas proximas funções
             
         }
 
 
-
+        /*A verificação na horizontal encontra o primeiro caracter em determinada posição x e valida se posição x + 1 também é igual ao caracter. 
+        Vale ressaltar que como estou trabalhando com um array unidimensional, uma posição na horizontal seria algo como: .....EEEE..., por isso a ideia de x + 1.
+         */
         static boolean horizontal(String[] palavras, String caracter){
             boolean horizontal = false;
         
@@ -111,6 +133,10 @@ public class App {
         
         }
 
+        /*A verificação na vertical se baseia na largura da matriz, que é fixada em 10, por padrão. Ele encontra a primeira posição  do caracter e verifica se nessa posição somada
+         * com a largura da matriz encontramos o mesmo caracter, se sim, retorna verdadeiro.@interface
+         * Vale ressaltar que como estou trabalhando com um array unidimensional, uma posição na vertical seria algo como: E.........E.........E, sendo i + largura a distancia entre cada navio
+        */
         static boolean vertical(String[] palavras, String caracter, int largura) {
             for (int i = 0; i < palavras.length - largura; i++) {
                 if(palavras[i] == null || palavras[i + largura] == null)continue;
@@ -121,6 +147,7 @@ public class App {
             return false;
         }
     
+        //Por fim é chamado as funções horizontal e vertical para cada navio
         static boolean HorizontalVertical(){
             String [] palavras = ValidaNavioDeCadaTipo();
             boolean C = vertical(palavras, "C", 10) || horizontal(palavras, "C");
@@ -129,12 +156,13 @@ public class App {
             boolean S = vertical(palavras, "S", 10) || horizontal(palavras, "S");
             boolean E = vertical(palavras, "E", 10) || horizontal(palavras, "E");
 
-
+            //Se caso algumas das chamadas acima for falsa, informa o erro e incrementa o valor da variavel global
             if(!(C && N && P && S && E)){
                 System.out.println("Tabuleiro possui navios que não estão na horizontal ou vertical!");
                 tabuleiroValido++;
             }
 
+            //Se o valor da variável global for igual a zero ainda, ou seja, passou em todos as condições, retorna true
             if(tabuleiroValido == 0){
                 return true;
             }
@@ -145,6 +173,7 @@ public class App {
 
     public static void main(String[] args) {
         
+        //Informa que o tabuleiro é valido
         if(HorizontalVertical()){
             System.out.println("Tabuleiro válido");
         }
