@@ -3,9 +3,169 @@
  */
 package org.example;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+//linha por linha sc.hasNextLine()
+//palavra por palavra sc.hashNext
 public class App {
-   
+    
+    static int qtdpalavras(File txt){
+        int p = 0;
+        try{
+            Scanner sc = new Scanner(txt);
+            //vai ler palavra por palavra
+            while(sc.hasNext()){
+                    sc.next();
+                    p++; //contador de palavras
+            }
+        }catch(FileNotFoundException e){
+            System.out.println("Erro " + e.getMessage());
+        }
+        return p;
+    }
+
+    //Valida a dimensão do navio
+    static String [] validaDimensão(File txt){
+        int i = 0, qtd;
+        qtd = qtdpalavras(txt);
+        String [] palavras = new String[qtd];
+
+        
+            try{
+                Scanner sc = new Scanner(txt);
+                //vai ler palavra por palavra
+                while(sc.hasNext()){
+                       
+                            palavras[i] = sc.next();
+                            i++;
+                        
+                        
+                }
+            }catch(FileNotFoundException e){
+                System.out.println("Erro " + e.getMessage());
+            }
+
+            if(qtd > 100 || qtd < 100){
+                System.out.println("Tabuleiro com dimensão inválida!");
+            }
+       
+
+        return palavras; //retorna o vetor que sera trabalhado nas outras funções e com o tamamnho ideal a ser analisado
+    }
+
+    //valida se existe outros navios dentro do tabuleiro
+    static String[] ValidaNavios(File txt){
+        String [] palavras = validaDimensão(txt);
+        int conhecidos = 1; //PARTE DO PRINCIPIO QUE TODOS OS NAVIOS SÃO CONHECIDOS
+
+    
+
+        //Verificando se possui navios desconehcidos
+        for(int j = 0; j < palavras.length; j++){
+            String p = palavras[j];
+
+            if(p == null)continue;
+
+            if(!(p.equals("C") || p.equals("S") || p.equals("P") || p.equals("N") || p.equals("E") || p.equals("."))){
+                conhecidos = 0;
+            }
+        }
+
+        if(conhecidos == 0){
+            System.out.println("Tabuleiro com outros navios!");
+        }
+
+        return palavras;
+        }
+
+        //A função vai validar se na matriz passada existe ao menos um caracter do tipo C, S, P, N e E
+        static String[] ValidaNavioDeCadaTipo(File txt){
+            String [] palavras = ValidaNavios(txt);
+            int qtdC = 0, qtdS = 0, qtdP =0, qtdN = 0, qtdE = 0;
+
+            for(int i = 0; i < palavras.length; i++){
+                String p = palavras[i];
+                if(p == null)continue;
+
+                switch (p) {
+                    case "C": qtdC++; break;
+                    case "E": qtdE++; break;
+                    case "S": qtdS++; break;
+                    case "P": qtdP++; break;
+                    case "N": qtdN++; break;
+                }
+            }
+
+            boolean validacao = qtdC < 1 || qtdE < 1 || qtdS < 1 || qtdP < 1 || qtdN < 1;  //SE ALGUM POSSUIR QUANTIDADE IGUAL A 0 => RETORNA TRUE
+            boolean validacao2 = qtdC > 3 || qtdE > 4 || qtdS > 3 || qtdP > 5 || qtdN > 2; //SE ALGUM POSSUIR MULTIPLOS NAVIOS DO MESMO TIPO ==> RETORNA TRUE
+            boolean validacao3 = qtdC < 3 || qtdE < 4 || qtdS < 3 || qtdP < 5 || qtdN < 2; //para o caso de possui navios de cada tipo e não possui multiplos navios, mas sim navios insuficientes
+            if(validacao){
+                System.out.println("Tabuleiro não inclui um navio de cada tipo!");
+            }
+
+            if(validacao2){
+                    System.out.println("Tabuleiro possui múltiplos navios do mesmo tipo!");
+            }
+
+            if(validacao3){
+                System.out.println("Tabuleiro possui navios insuficientes!");
+            }
+            return palavras;
+            
+        }
+
+
+
+        static boolean horizontal(String[] palavras, String caracter){
+            boolean horizontal = false;
+        
+            for (int i = 0; i < palavras.length; i++) { 
+                if (palavras[i].equals(caracter) && palavras[i + 1].equals(caracter)) {
+                    horizontal = true;
+                }
+            }
+
+           return horizontal;
+        
+        }
+
+        static boolean vertical(String[] palavras, String caracter, int largura) {
+            for (int i = 0; i < palavras.length - largura; i++) {
+                if (palavras[i].equals(caracter) && palavras[i + largura].equals(caracter)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    
+        static boolean HorizontalVertical(File txt){
+            String [] palavras = ValidaNavioDeCadaTipo(txt);
+            boolean C = vertical(palavras, "C", 10) || horizontal(palavras, "C");
+            boolean N = vertical(palavras, "N", 10) || horizontal(palavras, "N");
+            boolean P = vertical(palavras, "P", 10) || horizontal(palavras, "P");
+            boolean S = vertical(palavras, "S", 10) || horizontal(palavras, "S");
+            boolean E = vertical(palavras, "E", 10) || horizontal(palavras, "E");
+
+
+            if(C && N && P && S && E){
+                return true;
+            }
+
+            System.out.println("Tabuleiro possui navios que não estão na horizontal ou vertical!");
+            return false;
+        }
+
     public static void main(String[] args) {
-        System.out.println("Olá Mundo");
+        if(args.length < 1){
+            System.out.println("Número de argumentos inválidos. Forneça um arquivo .txt");
+        }
+        File arquivo = new File(args[0]);
+        
+
+        if(HorizontalVertical(arquivo)){
+            System.out.println("Tabuleiro válido");
+        }
+        
     }
 }
