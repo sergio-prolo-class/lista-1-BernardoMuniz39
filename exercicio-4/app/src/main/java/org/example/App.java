@@ -148,8 +148,10 @@ public class App {
         }
     
         //Por fim é chamado as funções horizontal e vertical para cada navio
-        static boolean HorizontalVertical(){
+        static void HorizontalVertical(){
             String [] palavras = ValidaNavioDeCadaTipo();
+
+            //Aqui pelo menos uma posição na horizontal ou vertical deve ser verdadeira, se não for as duas, então é uma posição inválida
             boolean C = vertical(palavras, "C", 10) || horizontal(palavras, "C");
             boolean N = vertical(palavras, "N", 10) || horizontal(palavras, "N");
             boolean P = vertical(palavras, "P", 10) || horizontal(palavras, "P");
@@ -162,19 +164,15 @@ public class App {
                 tabuleiroValido++;
             }
 
-            //Se o valor da variável global for igual a zero ainda, ou seja, passou em todos as condições, retorna true
-            if(tabuleiroValido == 0){
-                return true;
-            }
-
-            return false;
 
         }
 
     public static void main(String[] args) {
         
+        //Chama as funções em cascata para fazer a validação
+        HorizontalVertical();
         //Informa que o tabuleiro é valido
-        if(HorizontalVertical()){
+        if(tabuleiroValido == 0){
             System.out.println("Tabuleiro válido");
         }
         
