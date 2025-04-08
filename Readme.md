@@ -17,21 +17,24 @@ Para a utilização correta do algoritmo, certifique-se de estar na raiz do proj
 
 Após entrar dentro da pasta exemplo1, você pode executar o algoritmo com a tarefa `gradle run --args "<argumentos>"` e informar a figura e o tamanho desejado no lugar de argumentos. **Ambos os parâmetros são informados com letra minúscula, sem acento e separados por espaço**. Abaixo é exemplificado como executar cada figura do projeto:
 
-**Triângulo**
+**Triângulo:**
+
 Para a forma de triângulo, basta executar o comando abaixo no terminal com a seguinte formatação:
 
 `gradle run --args "triangulo <tamanho>`
 
 No lugar de tamanho você pode colocar o número que desejar, como saída o algoritmo irá mostrar um triangulo retângulo com a altura informada. Por exemplo, ao digitar `gradle run --args "triangulo 5"` irá ser impresso um triângulo com altura 5.
 
-**Losango**
+**Losango:**
+
 Para a forma de losango, basta executar o comando abaixo no terminal com a seguinte formatação:
 
 `gradle run --args "losango <tamanho>`
 
 No lugar de tamanho você pode colocar o número que desejar, como saída o algoritmo irá mostrar um losango com a altura total informada. Por exemplo, ao digitar `gradle run --args "losango 5"` irá ser impresso um losango com altura total 5.
 
-**Retângulo**
+**Retângulo:**
+
 Para a forma de retângulo, basta executar o comando abaixo no terminal com a seguinte formatação:
 
 `gradle run --args "retangulo <base> <altura>`
@@ -54,7 +57,7 @@ Caso seu resistor não possua a faixa de tolerância, basta desconsiderar o últ
 
 Se caso for informado alguma cor inválida ou na formatação incorreta, o programa informa a cor errada em questão e encerra o programa. Para executar novamente, basta utilizar a tarefa gradle run novamente na formatação correta.
 
-Para verificar as cores válidas para serem informada dentro do programa, consulte o link: [Tabela de cores resistor](https://static.wixstatic.com/media/767b08_494141490a1b4d83b7b942f8596bf9aa~mv2.png/v1/fill/w_288,h_515,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Tabela%20de%20cores%20de%20resistores%204%20faixas.png)
+Para verificar as cores válidas para serem informadas dentro do programa, consulte o link: [Tabela de cores resistor](https://static.wixstatic.com/media/767b08_494141490a1b4d83b7b942f8596bf9aa~mv2.png/v1/fill/w_288,h_515,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Tabela%20de%20cores%20de%20resistores%204%20faixas.png)
 
 
 ### Exemplo 3
